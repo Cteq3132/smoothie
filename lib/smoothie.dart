@@ -4,6 +4,7 @@ library smoothie;
 import 'dart:math';
 
 import 'package:bezier/bezier.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:vector_math/vector_math.dart';
 
 class Smoothie {
@@ -18,6 +19,21 @@ class Smoothie {
     bool isSorted = true,
   }) {
     return points.smooth(sampleCount, isSorted: isSorted);
+  }
+
+  static List<LatLng> smoothFromLatLng(
+    List<LatLng> points,
+    num sampleCount, {
+    bool isSorted = true,
+  }) {
+    final List<Point<num>> pointsSmoothed = points
+        .map((LatLng latLng) => Point<num>(latLng.latitude, latLng.longitude))
+        .toList()
+        .smooth(sampleCount, isSorted: isSorted);
+    return pointsSmoothed
+        .map((Point<num> point) =>
+            LatLng(point.x.toDouble(), point.y.toDouble()))
+        .toList();
   }
 }
 
